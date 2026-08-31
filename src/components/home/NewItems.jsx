@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 
 const NewItems = () => {
   const [items, setItems] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const itemsPerPage = 4;
 
   useEffect(() => {
     const fetchNewItems = async () => {
@@ -18,7 +21,6 @@ const NewItems = () => {
         }
 
         const data = await response.json();
-
         setItems(data);
       } catch (error) {
         console.error(error);
@@ -30,6 +32,22 @@ const NewItems = () => {
 
     fetchNewItems();
   }, []);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex + itemsPerPage >= items.length
+        ? 0
+        : prevIndex + itemsPerPage
+    );
+  };
+
+  const previousSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex - itemsPerPage < 0
+        ? Math.floor((items.length - 1) / itemsPerPage) * itemsPerPage
+        : prevIndex - itemsPerPage
+    );
+  };
 
   if (loading) {
     return (
@@ -74,14 +92,36 @@ const NewItems = () => {
             </div>
           </div>
 
-          {items.map((item, index) => (
-            <NewItemCard
-              key={item.id}
-              item={item}
-              index={index}
-            />
-          ))}
+          {items
+            .slice(currentIndex, currentIndex + itemsPerPage)
+            .map((item, index) => (
+              <NewItemCard
+                key={item.id}
+                item={item}
+                index={index}
+              />
+            ))}
         </div>
+
+        {items.length > itemsPerPage && (
+          <div className="d-flex justify-content-center gap-3 mt-4">
+            <button
+              type="button"
+              className="btn-main"
+              onClick={previousSlide}
+            >
+              Previous
+            </button>
+
+            <button
+              type="button"
+              className="btn-main"
+              onClick={nextSlide}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
