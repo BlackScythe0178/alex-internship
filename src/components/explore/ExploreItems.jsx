@@ -72,28 +72,49 @@ const ExploreItems = () => {
   };
 
   if (loading) {
-    return <p>Loading items...</p>;
+    return <ExploreSkeleton />;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="col-md-12 text-center">
+        <h3>Unable to load items</h3>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="col-md-12 text-center">
+        <h3>No items found</h3>
+        <p>There are currently no NFTs available to explore.</p>
+      </div>
+    );
   }
 
   return (
     <>
-      <div data-aos="fade-down" data-aos-duration="650">
+      <div
+        className="col-md-12"
+        data-aos="fade-down"
+        data-aos-duration="650"
+      >
         <select
           id="filter-items"
           value={filter}
           onChange={handleFilterChange}
         >
           <option value="">Default</option>
+
           <option value="price_low_to_high">
             Price, Low to High
           </option>
+
           <option value="price_high_to_low">
             Price, High to Low
           </option>
+
           <option value="likes_high_to_low">
             Most liked
           </option>
@@ -112,6 +133,7 @@ const ExploreItems = () => {
         <div className="col-md-12 text-center">
           <button
             id="loadmore"
+            type="button"
             className="btn-main lead"
             onClick={handleLoadMore}
           >
@@ -185,6 +207,7 @@ const ExploreItemCard = ({ item, index }) => {
             to="/author"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
+            title={`Creator: ${item.authorName || "Unknown"}`}
           >
             <img
               className="lazy"
@@ -205,7 +228,9 @@ const ExploreItemCard = ({ item, index }) => {
         <div className="nft__item_wrap">
           <div className="nft__item_extra">
             <div className="nft__item_buttons">
-              <button>Buy Now</button>
+              <button type="button">
+                Buy Now
+              </button>
 
               <div className="nft__item_share">
                 <h4>Share</h4>
@@ -260,6 +285,81 @@ const ExploreItemCard = ({ item, index }) => {
             <span>{item.likes}</span>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ExploreSkeleton = () => {
+  return (
+    <>
+      <div className="col-md-12">
+        <div
+          className="skeleton"
+          style={{
+            width: "180px",
+            maxWidth: "100%",
+            height: "40px",
+            marginBottom: "30px",
+          }}
+        ></div>
+      </div>
+
+      {Array.from({ length: 8 }).map((_, index) => (
+        <ExploreSkeletonCard key={index} />
+      ))}
+    </>
+  );
+};
+
+const ExploreSkeletonCard = () => {
+  return (
+    <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+      <div className="nft__item">
+        <div
+          className="skeleton"
+          style={{
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            marginBottom: "15px",
+          }}
+        ></div>
+
+        <div
+          className="skeleton"
+          style={{
+            width: "100%",
+            height: "250px",
+            marginBottom: "20px",
+          }}
+        ></div>
+
+        <div
+          className="skeleton"
+          style={{
+            width: "75%",
+            height: "20px",
+            marginBottom: "12px",
+          }}
+        ></div>
+
+        <div
+          className="skeleton"
+          style={{
+            width: "45%",
+            height: "16px",
+            marginBottom: "12px",
+          }}
+        ></div>
+
+        <div
+          className="skeleton"
+          style={{
+            width: "25%",
+            height: "16px",
+          }}
+        ></div>
       </div>
     </div>
   );
