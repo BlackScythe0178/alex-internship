@@ -21,6 +21,7 @@ const NewItems = () => {
         }
 
         const data = await response.json();
+
         setItems(data);
       } catch (error) {
         console.error(error);
@@ -34,18 +35,19 @@ const NewItems = () => {
   }, []);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + itemsPerPage >= items.length
+    setCurrentIndex((previousIndex) =>
+      previousIndex + itemsPerPage >= items.length
         ? 0
-        : prevIndex + itemsPerPage
+        : previousIndex + itemsPerPage
     );
   };
 
   const previousSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex - itemsPerPage < 0
-        ? Math.floor((items.length - 1) / itemsPerPage) * itemsPerPage
-        : prevIndex - itemsPerPage
+    setCurrentIndex((previousIndex) =>
+      previousIndex - itemsPerPage < 0
+        ? Math.floor((items.length - 1) / itemsPerPage) *
+          itemsPerPage
+        : previousIndex - itemsPerPage
     );
   };
 
@@ -91,37 +93,46 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-
-          {items
-            .slice(currentIndex, currentIndex + itemsPerPage)
-            .map((item, index) => (
-              <NewItemCard
-                key={item.id}
-                item={item}
-                index={index}
-              />
-            ))}
         </div>
 
-        {items.length > itemsPerPage && (
-          <div className="d-flex justify-content-center gap-3 mt-4">
+        <div className="home-carousel">
+          {items.length > itemsPerPage && (
             <button
               type="button"
-              className="btn-main"
+              className="home-carousel-arrow home-carousel-arrow-left"
               onClick={previousSlide}
+              aria-label="Show previous new items"
             >
-              Previous
+              ‹
             </button>
+          )}
 
+          <div className="row">
+            {items
+              .slice(
+                currentIndex,
+                currentIndex + itemsPerPage
+              )
+              .map((item, index) => (
+                <NewItemCard
+                  key={item.id}
+                  item={item}
+                  index={index}
+                />
+              ))}
+          </div>
+
+          {items.length > itemsPerPage && (
             <button
               type="button"
-              className="btn-main"
+              className="home-carousel-arrow home-carousel-arrow-right"
               onClick={nextSlide}
+              aria-label="Show next new items"
             >
-              Next
+              ›
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );
@@ -202,7 +213,9 @@ const NewItemCard = ({ item, index }) => {
         <div className="nft__item_wrap">
           <div className="nft__item_extra">
             <div className="nft__item_buttons">
-              <button>Buy Now</button>
+              <button type="button">
+                Buy Now
+              </button>
 
               <div className="nft__item_share">
                 <h4>Share</h4>
