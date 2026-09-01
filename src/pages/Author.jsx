@@ -162,7 +162,6 @@ const Author = () => {
                         type="button"
                         className="btn-main"
                         onClick={handleFollow}
-                        disabled={isFollowing}
                       >
                         {isFollowing ? "Following" : "Follow"}
                       </button>
