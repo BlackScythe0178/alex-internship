@@ -21,6 +21,7 @@ const HotCollections = () => {
         }
 
         const data = await response.json();
+
         setCollections(data);
       } catch (error) {
         console.error(error);
@@ -34,18 +35,20 @@ const HotCollections = () => {
   }, []);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + itemsPerPage >= collections.length
+    setCurrentIndex((previousIndex) =>
+      previousIndex + itemsPerPage >= collections.length
         ? 0
-        : prevIndex + itemsPerPage
+        : previousIndex + itemsPerPage
     );
   };
 
   const previousSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex - itemsPerPage < 0
-        ? Math.floor((collections.length - 1) / itemsPerPage) * itemsPerPage
-        : prevIndex - itemsPerPage
+    setCurrentIndex((previousIndex) =>
+      previousIndex - itemsPerPage < 0
+        ? Math.floor(
+            (collections.length - 1) / itemsPerPage
+          ) * itemsPerPage
+        : previousIndex - itemsPerPage
     );
   };
 
@@ -91,73 +94,86 @@ const HotCollections = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-
-          {collections
-            .slice(currentIndex, currentIndex + itemsPerPage)
-            .map((collection, index) => (
-              <div
-                className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-                key={collection.id}
-                data-aos="fade-up"
-                data-aos-duration="650"
-                data-aos-delay={(index % 4) * 100}
-                data-aos-offset="100"
-                data-aos-once="true"
-              >
-                <div className="nft_coll">
-                  <div className="nft_wrap">
-                    <Link to={`/item-details/${collection.nftId}`}>
-                      <img
-                        src={collection.nftImage}
-                        className="lazy img-fluid"
-                        alt={collection.title}
-                      />
-                    </Link>
-                  </div>
-
-                  <div className="nft_coll_pp">
-                    <Link to={`/author/${collection.authorId}`}>
-                      <img
-                        className="lazy pp-coll"
-                        src={collection.authorImage}
-                        alt={`${collection.title} author`}
-                      />
-                    </Link>
-
-                    <i className="fa fa-check"></i>
-                  </div>
-
-                  <div className="nft_coll_info">
-                    <Link to="/explore">
-                      <h4>{collection.title}</h4>
-                    </Link>
-
-                    <span>ERC-{collection.code}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
         </div>
 
-        {collections.length > itemsPerPage && (
-          <div className="d-flex justify-content-center gap-3 mt-4">
+        <div className="home-carousel">
+          {collections.length > itemsPerPage && (
             <button
               type="button"
-              className="btn-main"
+              className="home-carousel-arrow home-carousel-arrow-left"
               onClick={previousSlide}
+              aria-label="Show previous hot collections"
             >
-              Previous
+              ‹
             </button>
+          )}
 
+          <div className="row">
+            {collections
+              .slice(
+                currentIndex,
+                currentIndex + itemsPerPage
+              )
+              .map((collection, index) => (
+                <div
+                  className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
+                  key={collection.id}
+                  data-aos="fade-up"
+                  data-aos-duration="650"
+                  data-aos-delay={(index % 4) * 100}
+                  data-aos-offset="100"
+                  data-aos-once="true"
+                >
+                  <div className="nft_coll">
+                    <div className="nft_wrap">
+                      <Link
+                        to={`/item-details/${collection.nftId}`}
+                      >
+                        <img
+                          src={collection.nftImage}
+                          className="lazy img-fluid"
+                          alt={collection.title}
+                        />
+                      </Link>
+                    </div>
+
+                    <div className="nft_coll_pp">
+                      <Link
+                        to={`/author/${collection.authorId}`}
+                      >
+                        <img
+                          className="lazy pp-coll"
+                          src={collection.authorImage}
+                          alt={`${collection.title} author`}
+                        />
+                      </Link>
+
+                      <i className="fa fa-check"></i>
+                    </div>
+
+                    <div className="nft_coll_info">
+                      <Link to="/explore">
+                        <h4>{collection.title}</h4>
+                      </Link>
+
+                      <span>ERC-{collection.code}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+
+          {collections.length > itemsPerPage && (
             <button
               type="button"
-              className="btn-main"
+              className="home-carousel-arrow home-carousel-arrow-right"
               onClick={nextSlide}
+              aria-label="Show next hot collections"
             >
-              Next
+              ›
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );
